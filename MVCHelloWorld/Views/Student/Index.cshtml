@@ -1,0 +1,108 @@
+﻿@model MVCHelloWorld.Models.StudentsAndSchoolsBag
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<label>Adicionar os Alunos:</label> <br />
+<label>à Escola com o ID:</label><textarea id="addSchoolIdTextBox" rows="1"></textarea>
+<br />
+Insira a idade seguida do nome.
+<div>
+    <label>Os Alunos:</label>
+    <textarea id="textBox"></textarea>
+    <button id="getStudents">push</button>
+</div>
+
+
+<h3> Lista Completa de alunos</h3>
+<table>
+    <strong>
+        <thead>ID </thead>
+        <thead> Name </thead>
+        <thead> Age</thead>
+    </strong>
+    <tbody id="listagemEstudantes">
+        @foreach (var estudante in Model.GetStudentList().Take(2))
+        {
+            <tr>
+                <td>@estudante.ID</td>
+                <td>@estudante.Name</td>
+                <td>@estudante.Age</td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<small id="teste">
+    @if (Model.GetPage() > 1)
+    { <button id="previous"><</button>}
+    <text>@Model.GetPage() of @(Model.Students.Count / 2)</text>
+    @if (Model.GetPage() < Model.Students.Count / 2)
+    {<button id="next">></button>}
+</small>
+
+
+
+
+
+<script>
+    $('#previous').click(function () {
+        $.ajax({
+            traditional: true,
+            type: 'GET',
+            url: "/Index/previous/",
+            data: "",
+            dataType: "json",
+            success: function (response) {
+                location.reload();
+            },
+            error: function (response) {
+                alert(response);
+            }
+        });
+    })
+
+    $('#next').click(function () {
+        $.ajax({
+            traditional: true,
+            type: 'GET',
+            url: "/Index/next/",
+            data: "",
+            dataType: "json",
+            success: function (response) {
+                location.reload();
+            },
+            error: function (response) {
+                alert(response);
+            }
+        });
+
+    })
+
+    /* Function to add students to School */
+    $('#getStudents').click(function () {
+
+        var textBoxVal = $('#textBox').val();
+        var addText = $('#addSchoolIdTextBox').val();
+        $.ajax({
+            traditional: true,
+            type: 'POST',
+            url: "/Index/AddStudentsToSchool/",
+            data: { val1: addText, val2:  textBoxVal },
+            dataType: "json",
+            success: function (response) {
+                alert(response);
+                location.reload();
+            },
+            error: function (response) {
+                alert(response);
+            }
+        });
+    });
+
+</script>

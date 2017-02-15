@@ -1,0 +1,22 @@
+﻿@model MVCHelloWorld.Models.CallendarBag
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Callendar</h2>
+<table>
+    @foreach (var i in Model.GetEventos()) { 
+    <tr>
+        i.toString()
+    </tr>
+    }
+</table>
+
+
+<div data-provide="calendar"></div>
+
+<script src="~/Scripts/bootstrap-year-calendar.js"></script>
+<link href="~/Content/bootstrap-year-calendar.css" rel="stylesheet" type="text/css" />
+

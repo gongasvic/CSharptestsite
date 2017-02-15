@@ -1,0 +1,50 @@
+﻿@model MVCHelloWorld.Models.StudentsAndSchoolsBag
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Registrar a sua Escola</h1>
+
+
+<label>Nome da Escola: </label>
+<br />
+Insira o nome da escola.
+<br />
+<textarea id="schoolNameTextBox" rows="1"></textarea>
+<button id="registerSchool">registrar</button>
+
+<br />
+<br />
+
+@foreach (var school in Model.Schools)
+{
+    <label>@school.ID</label>
+    <label> - </label>
+    <label>@school.Name</label>
+    <br />
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script>
+    $('#registerSchool').click(function () {
+        var nomeEscola = $('#schoolNameTextBox').val();
+        $.ajax({
+            traditional: true,
+            type: 'GET',
+            url: "/School/CreateSchool/",
+            data: {val1: nomeEscola},
+            dataType: "json",
+            success: function (response) {
+                location.reload();
+            },
+            error: function (response) {
+                alert("Houve um erro de processamento tente outra vez");
+            }
+        })
+    });
+</script>
+
+

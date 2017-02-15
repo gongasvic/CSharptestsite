@@ -10,15 +10,15 @@ namespace MVCHelloWorld.Controllers
 {
     public class IndexController : Controller
     {
-        // GET: Index
+        // GET: /
         public ActionResult Index()
         {
             var bag = new StudentsAndSchoolsBag()
             {
                 Schools = DataBase.GetSchools(),
                 Students = DataBase.GetStudents(),
-                
-                
+
+
             };
 
             return View(bag);
@@ -35,23 +35,47 @@ namespace MVCHelloWorld.Controllers
         }
 
         [WebMethod]
-        public JsonResult AddStudentsToSchool(string foo, string zoo)
+        public JsonResult AddStudentsToSchool(string val1, string val2)
         {
-
-            return Json(foo + " " + zoo, JsonRequestBehavior.AllowGet);
-            string val1 = foo;
-            string val2 = zoo;
             string[] teste;
             int age;
+            int success = 0;
             teste = val2.Trim().Split();
             School escola = DataBase.GetSchool(int.Parse(val1.Trim()));
-            for (int i = 1; i < (teste.Length) / 2; i += 2)
-                if (int.TryParse(teste[0], out age)) {
-                    Student estudante = DataBase.AddStudent(teste[1],age);
+            for (int i = 0; i < teste.Length; i += 2)
+                try { 
+                if (int.TryParse(teste[i], out age))
+                {
+                    Student estudante = DataBase.AddStudent(teste[i + 1], age);
                     DataBase.AddStudentToSchool(escola, estudante);
+                    success++;
                 }
+                }catch(Exception e) {
+                    if (success > 0)
+                        return Json("Success", JsonRequestBehavior.AllowGet);
+                    else
+                        return Json("Something went wrong", JsonRequestBehavior.AllowGet);
+                }
+            if (success > 0)
+                return Json("Success", JsonRequestBehavior.AllowGet);
+            return Json("Something went wrong", JsonRequestBehavior.AllowGet);
 
-            return Json("success", JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult previous()
+        {
+            int page = --StudentsAndSchoolsBag.current_page;
+            StudentsAndSchoolsBag.StdList = DataBase.GetStudents().Skip(page-1).Take(2).ToList();
+            return Json("sussess", JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult next()
+        {
+            int page =  ++StudentsAndSchoolsBag.current_page;
+            StudentsAndSchoolsBag.StdList = DataBase.GetStudents().Skip(page).Take(2).ToList();
+            return Json("sussess", JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

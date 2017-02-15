@@ -1,10 +1,11 @@
 ﻿
 @model MVCHelloWorld.Models.StudentsAndSchoolsBag
+
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h1>Index</h1>
 
 <label>Pesquisar alunos de uma escola.</label>
 <br />
@@ -12,8 +13,6 @@
 <textarea id="schoolIdTextBox" rows="1"></textarea>
 <button id="searchStudents">Pesquisar</button>
 
-<br/>
-<br />
 <br />
 <br />
 <label>Escolas:</label>
@@ -29,81 +28,11 @@
 }
 
 <br />
-<label>Adicionar os Alunos:</label> <br />
-<label>da Escola:</label>
-<textarea id="addSchoolIdTextBox" rows="1"></textarea>
-<br />
-<div>
-    <textarea id="textBox"></textarea>
-    <button id="getStudents">push</button>
-</div>
-
-
-<h3> Lista Completa de alunos</h3>
-<table>
-    <strong>
-    <thead>ID </thead>
-    <thead> Name </thead>
-    <thead> Age</thead>
-    </strong>
-    <tbody id="listagemEstudantes">
-        @foreach (var estudante in Model.Students.Take(2))
-        {
-            <tr>
-                <td>@estudante.ID</td>
-                <td>@estudante.Name</td>
-                <td>@estudante.Age</td>
-            </tr>
-        }
-    </tbody>
-   
-</table>
- <small>
-    @if (Model.current_page > 1) { <button id="previous"><</button>}
-     <text id="page">@Model.current_page of @(Model.Students.Count / 2)</text> 
-    @if (Model.current_page < Model.Students.Count / 2) {<button id="next">></button>}
- </small>
 
 
 
-
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script>
-    var current_page = 1;
-
-    $('#previous').click(function () {
-        $('#listagemEstudantes').html("@foreach (var estudante in Model.Students.Skip((current_page-1) * 2).Take(2)){<tr><td>@estudante.ID</td><td>@estudante.Name</td><td>@estudante.Age</td></tr>}")
-        current_page--;
-    })
-
-    $('#next').click(function () {
-        $('#listagemEstudantes').html("@foreach (var estudante in Model.Students.Skip(current_page*2).Take(2)){<tr><td>@estudante.ID</td><td>@estudante.Name</td><td>@estudante.Age</td></tr
-        current_page++;
-
-    })
-
-    $('#getStudents').click(function () {
-
-        var textBoxVal = $('#textBox').val();
-        var addText = $('#addSchoolIdTextBox').val();
-
-
-
-        $.ajax({
-        traditional: true,
-            type: 'POST',
-            url: "/Index/AddStudentsToSchool/",
-            data: JSON.stringify({ foo: addText, zoo:  textBoxVal }),
-            dataType: "json",
-            success: function (response) {
-                alert(JSON.stringify(response));
-            },
-            error: function (response) {
-                alert(response.responseText);
-            }
-        });
-    });
-
+    /*Function to view the students who study at a specific school*/
     $('#searchStudents').click(function () {
         var textBoxVal = $('#schoolIdTextBox').val();
 
